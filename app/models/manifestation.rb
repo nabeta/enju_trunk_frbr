@@ -32,6 +32,10 @@ class Manifestation < ActiveRecord::Base
   attr_accessible :delete_attachment
   attr_protected :periodical_master
 
+  def self.gem_test
+    p "gem test"
+  end
+
   def self.per_page
     10
   end
