@@ -7,9 +7,6 @@ class Realize < ActiveRecord::Base
 
   acts_as_list :scope => :expression
 
-  def self.per_page
-    10
-  end
 end
 
 # == Schema Information

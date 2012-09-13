@@ -32,14 +32,6 @@ class Manifestation < ActiveRecord::Base
   attr_accessible :delete_attachment
   attr_protected :periodical_master
 
-  def self.gem_test
-    p "gem test"
-  end
-
-  def self.per_page
-    10
-  end
-
   def check_pub_date
     logger.info "manifestaion#check pub_date=#{self.pub_date}"
     date = self.pub_date.to_s.gsub(' ', '').dup

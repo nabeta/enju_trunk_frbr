@@ -7,9 +7,6 @@ class Create < ActiveRecord::Base
 
   acts_as_list :scope => :work
 
-  def self.per_page
-    10
-  end
 end
 
 # == Schema Information
