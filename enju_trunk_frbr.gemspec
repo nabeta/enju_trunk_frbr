@@ -7,11 +7,11 @@ require "enju_trunk_frbr/version"
 Gem::Specification.new do |s|
   s.name        = "enju_trunk_frbr"
   s.version     = EnjuTrunkFrbr::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of EnjuTrunkFrbr."
-  s.description = "TODO: Description of EnjuTrunkFrbr."
+  s.authors     = ["Emiko TAMIYA"]
+  s.email       = ["tamiya.emiko@miraitsystems.jp"]
+  s.homepage    = "https://github.com/nakamura-akifumi/enju_trunk"
+  s.summary     = "FRBR models for EnjuTrunk"
+  s.description = "FRBR models requierd for EnjuTrunk"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
