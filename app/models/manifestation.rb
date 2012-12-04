@@ -13,8 +13,6 @@ class Manifestation < ActiveRecord::Base
   belongs_to :manifestation_relationship_type
 
   validates_presence_of :original_title
-  validates :start_page, :numericality => true, :allow_blank => true
-  validates :end_page, :numericality => true, :allow_blank => true
   validates :isbn, :uniqueness => true, :allow_blank => true, :unless => proc{|manifestation| manifestation.series_statement}
   validates :nbn, :uniqueness => true, :allow_blank => true
   validates :identifier, :uniqueness => true, :allow_blank => true
@@ -154,6 +152,7 @@ class Manifestation < ActiveRecord::Base
 
   def number_of_pages
     if self.start_page and self.end_page
+      return nil if self.start_page.match(/\D*/) or self.end_page.match(/\D*/)
       page = self.end_page.to_i - self.start_page.to_i + 1
     end
   end
