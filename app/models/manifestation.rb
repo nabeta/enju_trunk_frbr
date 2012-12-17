@@ -30,6 +30,7 @@ class Manifestation < ActiveRecord::Base
   before_save :delete_attachment?
   normalize_attributes :identifier, :pub_date, :isbn, :issn, :nbn, :lccn, :original_title
   attr_accessible :delete_attachment
+  attr_accessor :series_statement_id
   attr_protected :periodical_master
 
   def check_pub_date
