@@ -6,7 +6,7 @@ class Realize < ActiveRecord::Base
   validates_uniqueness_of :expression_id, :scope => :patron_id
 
   acts_as_list :scope => :expression
-
+  attr_accessible :expression, :patron, :expression_id, :patron_id
 end
 
 # == Schema Information

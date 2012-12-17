@@ -6,7 +6,7 @@ class Create < ActiveRecord::Base
   validates_uniqueness_of :work_id, :scope => :patron_id
 
   acts_as_list :scope => :work
-
+  attr_accessible :work_id, :patron_id, :work, :patron
 end
 
 # == Schema Information
