@@ -75,15 +75,15 @@ class Manifestation < ActiveRecord::Base
 
   def check_isbn
     if isbn.present?
-      unless ISBN_Tools.is_valid?(isbn)
+      unless  Lisbn.new(isbn).valid?
         errors.add(:isbn)
       end
     end
   end
 
   def check_issn
-    self.issn = ISBN_Tools.cleanup(issn)
     if issn.present?
+      self.issn = Lisbn.new(issn)
       unless StdNum::ISSN.valid?(issn)
         errors.add(:issn)
       end
@@ -100,7 +100,7 @@ class Manifestation < ActiveRecord::Base
 
   def set_wrong_isbn
     if isbn.present?
-      unless ISBN_Tools.is_valid?(isbn)
+      unless Lisbn.new(isbn).valid?
         self.wrong_isbn
         self.isbn = nil
       end
@@ -108,13 +108,13 @@ class Manifestation < ActiveRecord::Base
   end
 
   def convert_isbn
-    num = ISBN_Tools.cleanup(isbn) if isbn
+    num = Lisbn.new(isbn) if isbn
     if num
       if num.length == 10
         self.isbn10 = num
-        self.isbn = ISBN_Tools.isbn10_to_isbn13(num)
+        self.isbn = num.isbn13
       elsif num.length == 13
-        self.isbn10 = ISBN_Tools.isbn13_to_isbn10(num)
+        self.isbn10 = num.isbn10
       end
     end
   end
@@ -188,7 +188,7 @@ class Manifestation < ActiveRecord::Base
   end
 
   def hyphenated_isbn
-    ISBN_Tools.hyphenate(isbn)
+    Lisbn.new(isbn).parts.join("-")
   end
 
   def set_digest(options = {:type => 'sha1'})
@@ -214,12 +214,13 @@ class Manifestation < ActiveRecord::Base
 =end
 
   def self.find_by_isbn(isbn)
-    if ISBN_Tools.is_valid?(isbn)
-      ISBN_Tools.cleanup!(isbn)
+    lisbn = Lisbn.new(isbn)
+    if lisbn.is_valid?
+      #ISBN_Tools.cleanup!(isbn)
       if isbn.size == 10
-        Manifestation.where(:isbn => ISBN_Tools.isbn10_to_isbn13(isbn)).first || Manifestation.where(:isbn => isbn).first
+        Manifestation.where(:isbn => lisbn.isbn13).first || Manifestation.where(:isbn => lisbn).first
       else
-        Manifestation.where(:isbn => isbn).first || Manifestation.where(:isbn => ISBN_Tools.isbn13_to_isbn10(isbn)).first
+        Manifestation.where(:isbn => lisbn).first || Manifestation.where(:isbn => lisbn.isbn10).first
       end
     end
   end
