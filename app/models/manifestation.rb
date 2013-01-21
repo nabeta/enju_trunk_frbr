@@ -215,7 +215,7 @@ class Manifestation < ActiveRecord::Base
 
   def self.find_by_isbn(isbn)
     lisbn = Lisbn.new(isbn)
-    if lisbn.is_valid?
+    if lisbn.valid?
       #ISBN_Tools.cleanup!(isbn)
       if isbn.size == 10
         Manifestation.where(:isbn => lisbn.isbn13).first || Manifestation.where(:isbn => lisbn).first
