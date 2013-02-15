@@ -153,8 +153,10 @@ class Manifestation < ActiveRecord::Base
 
   def number_of_pages
     if self.start_page and self.end_page
-      if self.start_page.to_s.match(/\D/).nil? and self.end_page.to_s.match(/\D/).nil?
-        page = self.end_page.to_i - self.start_page.to_i + 1
+      if self.start_page.present? and self.end_page.present?
+        if self.start_page.to_s.match(/\D/).nil? and self.end_page.to_s.match(/\D/).nil?
+          page = self.end_page.to_i - self.start_page.to_i + 1
+        end
       end
     end
   end
