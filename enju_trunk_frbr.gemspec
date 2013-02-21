@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 3.2"
   s.add_dependency "lisbn"
   s.add_dependency "nori", "~> 2.0"
+  s.add_dependency "enju_core"
+  s.add_dependency "validates_timeliness"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"
