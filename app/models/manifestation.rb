@@ -140,7 +140,11 @@ class Manifestation < ActiveRecord::Base
   end
 
   def self.cached_numdocs
-    Rails.cache.fetch("manifestation_search_total"){Manifestation.search.total}
+    Rails.cache.fetch("manifestation_search_total"){ 
+      Manifestation.search do
+        with(:periodical_master, false)
+      end.total
+    }
   end
 
   def clear_cached_numdocs
