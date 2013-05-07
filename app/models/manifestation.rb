@@ -13,7 +13,9 @@ class Manifestation < ActiveRecord::Base
   belongs_to :manifestation_relationship_type
 
   validates_presence_of :original_title
-  validates :isbn, :uniqueness => true, :allow_blank => true, :unless => proc{|manifestation| manifestation.series_statement}
+  if SystemConfiguration.get("manifestation.isbn_unique")
+    validates :isbn, :uniqueness => true, :allow_blank => true, :unless => proc{|manifestation| manifestation.series_statement}
+  end
   validates :nbn, :uniqueness => true, :allow_blank => true
   validates :identifier, :uniqueness => true, :allow_blank => true
   validates :access_address, :url => true, :allow_blank => true, :length => {:maximum => 255}
@@ -140,7 +142,11 @@ class Manifestation < ActiveRecord::Base
   end
 
   def self.cached_numdocs
-    Rails.cache.fetch("manifestation_search_total"){Manifestation.search.total}
+    Rails.cache.fetch("manifestation_search_total"){ 
+      Manifestation.search do
+        with(:periodical_master, false)
+      end.total
+    }
   end
 
   def clear_cached_numdocs
@@ -153,8 +159,10 @@ class Manifestation < ActiveRecord::Base
 
   def number_of_pages
     if self.start_page and self.end_page
-      if self.start_page.to_s.match(/\D/).nil? and self.end_page.to_s.match(/\D/).nil?
-        page = self.end_page.to_i - self.start_page.to_i + 1
+      if self.start_page.present? and self.end_page.present?
+        if self.start_page.to_s.match(/\D/).nil? and self.end_page.to_s.match(/\D/).nil?
+          page = self.end_page.to_i - self.start_page.to_i + 1
+        end
       end
     end
   end
