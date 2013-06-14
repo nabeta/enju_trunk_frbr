@@ -10,6 +10,7 @@ class Item < ActiveRecord::Base
 
   normalize_attributes :item_identifier
 
+  before_save :set_acquired_at
   attr_accessor :library_id, :manifestation_id, :use_restriction_id
 
   def title
@@ -22,6 +23,26 @@ class Item < ActiveRecord::Base
     else
       return Time.now.strftime("%Y%m")
     end
+  end
+
+  def set_acquired_at
+    return if acquired_at_string.blank?
+    begin
+      date = Time.zone.parse("#{acquired_at_string}")
+    rescue ArgumentError
+      begin
+        date = Time.zone.parse("#{acquired_at_string}-01")
+        date = date.end_of_month
+      rescue ArgumentError
+        begin
+          date = Time.zone.parse("#{acquired_at_string}-12-01")
+          date = date.end_of_month
+        rescue ArgumentError
+          nil
+        end
+      end
+    end
+    self.acquired_at = date
   end
 
   private
