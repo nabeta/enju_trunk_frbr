@@ -7,7 +7,7 @@ class Exemplify < ActiveRecord::Base
   validates_uniqueness_of :item_id
   after_save :reindex
   after_destroy :reindex
-  after_create :create_lending_policy
+  after_create :create_lending_policy, :unless => proc{SystemConfiguration.isWebOPAC}
 
   acts_as_list :scope => :manifestation_id
 
