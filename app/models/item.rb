@@ -12,6 +12,7 @@ class Item < ActiveRecord::Base
   normalize_attributes :item_identifier
 
   before_save :set_acquired_at
+  after_update :update_bindered, :if => proc{|item| item.bookbinder}
   attr_accessor :library_id, :manifestation_id, :use_restriction_id
 
   def title
@@ -67,6 +68,11 @@ class Item < ActiveRecord::Base
       end
     end
     self.acquired_at = date
+  end
+
+  def update_bindered
+    items = Item.where(:bookbinder_id => self.id)
+    items.map{|i| i.update_attributes(:shelf_id => self.shelf_id)}
   end
 
   private
