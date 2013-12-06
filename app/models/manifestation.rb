@@ -16,7 +16,7 @@ class Manifestation < ActiveRecord::Base
   validates_presence_of :original_title
   validates :isbn, :uniqueness => true, :allow_blank => true, :unless => proc{ |manifestation| manifestation.series_statement }, :if => proc{ SystemConfiguration.get("manifestation.isbn_unique") }
   validates :nbn, :uniqueness => true, :allow_blank => true
-  validates :identifier, :uniqueness => true, :allow_blank => true
+  validates :manifestation_identifier, :uniqueness => true, :allow_blank => true
   validates :access_address, :url => true, :allow_blank => true, :length => {:maximum => 255}
   validate :check_isbn, :check_issn, :check_lccn, :unless => :during_import
 
@@ -27,7 +27,7 @@ class Manifestation < ActiveRecord::Base
   after_create :clear_cached_numdocs
   before_save :set_date_of_publication, :set_new_serial_number, :set_volume_issue_number
   before_save :delete_attachment?
-  normalize_attributes :identifier, :pub_date, :isbn, :issn, :nbn, :lccn, :original_title
+  normalize_attributes :manifestation_identifier, :pub_date, :isbn, :issn, :nbn, :lccn, :original_title
   attr_accessible :delete_attachment
   attr_accessor :series_statement_id
   attr_protected :periodical_master
